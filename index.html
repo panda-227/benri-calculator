@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="家電の消費電力と使用時間から、1日・1か月・1年間の電気代を無料で計算できます。">
+<title>電気代計算ツール｜暮らしの計算ツール</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, "Meiryo", sans-serif;
+  background: #f0f4f8;
+  color: #263445;
+  line-height: 1.7;
+}
+
+header {
+  background: #1559a4;
+  color: white;
+  padding: 24px 15px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+header p {
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+
+main {
+  max-width: 800px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 12px #0000000d;
+}
+
+h2 {
+  color: #1559a4;
+  font-size: 23px;
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #b8c5d3;
+  border-radius: 7px;
+  font-size: 18px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 22px;
+  background: #1559a4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #10457f;
+}
+
+.result {
+  background: #eaf4ff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.price {
+  font-size: 36px;
+  font-weight: bold;
+  color: #1559a4;
+  overflow-wrap: anywhere;
+}
+
+.details {
+  border-top: 1px solid #bfd5ec;
+  margin-top: 15px;
+  padding-top: 10px;
+}
+
+.note {
+  color: #596575;
+  font-size: 13px;
+}
+
+#error {
+  color: #b91c1c;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #dddddd;
+  text-align: left;
+}
+
+th {
+  background: #eaf4ff;
+}
+
+footer {
+  text-align: center;
+  padding: 25px 15px;
+  color: #667085;
+  font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 18px;
+  }
+
+  header h1 {
+    font-size: 22px;
+  }
+
+  .price {
+    font-size: 30px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>暮らしの計算ツール</h1>
+  <p>生活に役立つ便利な無料計算サイト</p>
+</header>
+
+<main>
+
+<section class="card">
+  <h2>電気代計算ツール</h2>
+
+  <p>
+    家電の消費電力と使用時間を入力するだけで、
+    電気代を簡単に計算できます。
+  </p>
+
+  <form id="calculator">
+
+    <label for="watt">消費電力（W）</label>
+    <input type="number" id="watt"
+      value="1000" min="0" step="any" required>
+
+    <label for="hours">1日の使用時間（時間）</label>
+    <input type="number" id="hours"
+      value="3" min="0" max="24"
+      step="any" required>
+
+    <label for="days">使用日数（日）</label>
+    <input type="number" id="days"
+      value="30" min="1" max="366"
+      step="1" required>
+
+    <label for="rate">電気料金単価（円/kWh）</label>
+    <input type="number" id="rate"
+      value="31" min="0" step="any" required>
+
+    <button type="submit">電気代を計算する</button>
+
+  </form>
+
+  <p id="error" role="alert"></p>
+
+  <div class="result" aria-live="polite">
+
+    <div>指定期間の推定電気代</div>
+    <div class="price" id="totalCost">2,790円</div>
+
+    <div class="details">
+      <p>1日あたり：<strong id="dailyCost">93円</strong></p>
+      <p>1か月（30日）：<strong id="monthlyCost">2,790円</strong></p>
+      <p>1年間（365日）：<strong id="yearlyCost">33,945円</strong></p>
+      <p>指定期間の消費電力量：
+        <strong id="energy">90 kWh</strong>
+      </p>
+    </div>
+
+  </div>
+
+  <p class="note">
+    ※基本料金などを除いた概算です。
+    電気料金単価31円は計算例です。
+    ご契約の料金単価に変更してください。
+    年間電気代は毎日同じ時間使用した場合の試算です。
+  </p>
+
+</section>
+
+<section class="card">
+
+  <h2>電気代の計算方法</h2>
+
+  <p>
+    電気代は、消費電力・使用時間・使用日数・
+    電気料金単価を使って計算できます。
+  </p>
+
+  <p>
+    <strong>
+      電気代（円）＝ 消費電力（W）÷ 1000
+      × 使用時間 × 使用日数 × 電気料金単価
+    </strong>
+  </p>
+
+  <p>
+    例えば、1000Wの家電を1日3時間、
+    30日間使用し、電気料金単価が31円の場合、
+    電気代は2,790円になります。
+  </p>
+
+</section>
+
+<section class="card">
+
+  <h2>家電の消費電力の目安</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>家電製品</th>
+        <th>消費電力の例</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>LED照明</td><td>10W</td></tr>
+      <tr><td>扇風機</td><td>40W</td></tr>
+      <tr><td>テレビ</td><td>100W</td></tr>
+      <tr><td>パソコン</td><td>150W</td></tr>
+      <tr><td>エアコン</td><td>600W</td></tr>
+      <tr><td>電子レンジ</td><td>1400W</td></tr>
+      <tr><td>ドライヤー</td><td>1200W</td></tr>
+      <tr><td>電気ストーブ</td><td>1000W</td></tr>
+    </tbody>
+  </table>
+
+  <p class="note">
+    ※消費電力は機種や運転状況によって異なります。
+    正確な数値は製品の仕様をご確認ください。
+  </p>
+
+</section>
+
+<section class="card">
+
+  <h2>よくある質問</h2>
+
+  <h3>この計算ツールは無料ですか？</h3>
+  <p>はい。登録不要で無料でご利用いただけます。</p>
+
+  <h3>実際の電気料金と同じになりますか？</h3>
+  <p>
+    基本料金や契約内容、各種調整額などにより、
+    実際の請求額とは異なる場合があります。
+  </p>
+
+  <h3>30分使用した場合はどう入力しますか？</h3>
+  <p>使用時間に0.5と入力してください。</p>
+
+</section>
+
+</main>
+
+<footer>
+  <p>© 2026 暮らしの計算ツール</p>
+  <p>計算結果は参考値としてご利用ください。</p>
+</footer>
+
+<script>
+function calculate() {
+
+  const form = document.getElementById("calculator");
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const watt = Number(document.getElementById("watt").value);
+  const hours = Number(document.getElementById("hours").value);
+  const days = Number(document.getElementById("days").value);
+  const rate = Number(document.getElementById("rate").value);
+
+  const dailyEnergy = watt / 1000 * hours;
+  const daily = dailyEnergy * rate;
+  const total = daily * days;
+  const monthly = daily * 30;
+  const yearly = daily * 365;
+  const energy = dailyEnergy * days;
+
+  const values = [daily, total, monthly, yearly, energy];
+
+  if (!values.every(Number.isFinite)) {
+    document.getElementById("error").textContent =
+      "入力した数値が大きすぎます。";
+    return;
+  }
+
+  document.getElementById("error").textContent = "";
+
+  function yen(value) {
+    return value.toLocaleString("ja-JP", {
+      maximumFractionDigits: 2
+    }) + "円";
+  }
+
+  document.getElementById("totalCost").textContent = yen(total);
+  document.getElementById("dailyCost").textContent = yen(daily);
+  document.getElementById("monthlyCost").textContent = yen(monthly);
+  document.getElementById("yearlyCost").textContent = yen(yearly);
+
+  document.getElementById("energy").textContent =
+    energy.toLocaleString("ja-JP", {
+      maximumFractionDigits: 3
+    }) + " kWh";
+}
+
+document.getElementById("calculator")
+  .addEventListener("submit", function(event) {
+    event.preventDefault();
+    calculate();
+  });
+
+calculate();
+</script>
+
+</body>
+</html>
